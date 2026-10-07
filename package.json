@@ -1,0 +1,54 @@
+{
+    "name": "rehype-ruby-annotator",
+    "version": "1.0.0",
+    "description": "A rehype plugin that adds HTML ruby annotations using user-provided entries.",
+    "keywords": [
+        "astro",
+        "rehype",
+        "ruby",
+        "furigana",
+        "japanese",
+        "annotation",
+        "unified",
+        "hast"
+    ],
+    "homepage": "https://github.com/yukidoke/rehype-ruby-annotator#readme",
+    "bugs": {
+        "url": "https://github.com/yukidoke/rehype-ruby-annotator/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/yukidoke/rehype-ruby-annotator.git"
+    },
+    "license": "MIT",
+    "engines": {
+        "node": ">=18"
+    },
+    "author": "yukidoke",
+    "type": "module",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        }
+    },
+    "files": [
+        "dist/**/*.js",
+        "dist/**/*.d.ts"
+    ],
+    "scripts": {
+        "build": "tsc",
+        "test": "pnpm run build && node --test test/rehype-ruby-annotator.test.mjs",
+        "prepack": "pnpm run build"
+    },
+    "devDependencies": {
+        "typescript": "^6.0.3"
+    },
+    "dependencies": {
+        "@types/hast": "^3.0.4",
+        "unist-util-visit-parents": "^6.0.2",
+        "vfile": "^6.0.3"
+    }
+}
