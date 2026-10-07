@@ -1,24 +1,23 @@
 {
-    "name": "rehype-ruby-annotator",
+    "name": "satteri-ruby-annotator",
     "version": "1.0.0",
-    "description": "A rehype plugin that adds HTML ruby annotations using user-provided entries.",
+    "description": "A satteri plugin that adds HTML ruby annotations using user-provided entries.",
     "keywords": [
         "astro",
-        "rehype",
+        "satteri",
         "ruby",
         "furigana",
         "japanese",
         "annotation",
-        "unified",
         "hast"
     ],
-    "homepage": "https://github.com/yukidoke/rehype-ruby-annotator#readme",
+    "homepage": "https://github.com/yukidoke/satteri-ruby-annotator#readme",
     "bugs": {
-        "url": "https://github.com/yukidoke/rehype-ruby-annotator/issues"
+        "url": "https://github.com/yukidoke/satteri-ruby-annotator/issues"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/yukidoke/rehype-ruby-annotator.git"
+        "url": "git+https://github.com/yukidoke/satteri-ruby-annotator.git"
     },
     "license": "MIT",
     "engines": {
@@ -40,15 +39,14 @@
     ],
     "scripts": {
         "build": "tsc",
-        "test": "pnpm run build && node --test test/rehype-ruby-annotator.test.mjs",
+        "test": "pnpm run build && node --test test/satteri-ruby-annotator.test.mjs",
         "prepack": "pnpm run build"
     },
     "devDependencies": {
         "typescript": "^6.0.3"
     },
     "dependencies": {
-        "@types/hast": "^3.0.4",
-        "unist-util-visit-parents": "^6.0.2",
-        "vfile": "^6.0.3"
+        "@types/hast": "^3.0.5",
+        "satteri": "^0.10.5"
     }
 }

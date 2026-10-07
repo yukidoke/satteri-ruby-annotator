@@ -12,5 +12,5 @@ export type {
     RubyEntrySegment,
     RubyEntryInput,
     NormalizedRubyEntry,
-    RehypeRubyOptions,
+    SatteriRubyOptions,
 } from "./types.js";

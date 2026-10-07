@@ -1,6 +1,7 @@
-# rehype-ruby-annotator
+# satteri-ruby-annotator
 
-`rehype-ruby-annotator` は、HTML AST 内のテキストに `<ruby>` 要素を追加する rehype プラグインです。
+`satteri-ruby-annotator` は、HTML AST 内のテキストに `<ruby>` 要素を追加する Sätteri HAST プラグインです。
+
 本文中の日本語に、あらかじめ定義したふりがなを自動で付与する用途を想定しています。
 
 ```html
@@ -22,15 +23,21 @@
 ## インストール
 
 ```sh
-pnpm add rehype-ruby-annotator
+pnpm add satteri-ruby-annotator
 ```
 
 ```sh
-npm install rehype-ruby-annotator
+npm install satteri-ruby-annotator
 ```
 
 ```sh
-yarn add rehype-ruby-annotator
+yarn add satteri-ruby-annotator
+```
+
+Sätteri を直接利用する場合は、あわせてインストールします。
+
+```sh
+pnpm add satteri
 ```
 
 ## 動作環境
@@ -41,14 +48,11 @@ yarn add rehype-ruby-annotator
 
 ## 基本的な使い方
 
-以下は Markdown を HTML に変換する unified pipeline の最小例です。
+以下は Sätteri で Markdown を HTML に変換する最小例です。
 
 ```ts
-import rehypeRuby from "rehype-ruby-annotator";
-import rehypeStringify from "rehype-stringify";
-import remarkParse from "remark-parse";
-import remarkRehype from "remark-rehype";
-import { unified } from "unified";
+import { markdownToHtml } from "satteri";
+import satteriRuby from "satteri-ruby-annotator";
 
 const options = {
     entries: [
@@ -65,32 +69,46 @@ const options = {
     ],
 };
 
-const file = await unified()
-    .use(remarkParse)
-    .use(remarkRehype)
-    .use(rehypeRuby, options)
-    .use(rehypeStringify)
-    .process("私は日本語を読む。");
+const { html } = markdownToHtml(
+    "私は日本語を読む。",
+    {
+        hastPlugins: [
+            satteriRuby(options),
+        ],
+    },
+);
 
-console.log(String(file));
+console.log(html);
+```
+
+出力例:
+
+```html
+<p>私は<ruby>日本語<rp>(</rp><rt>にほんご</rt><rp>)</rp></ruby>を読む。</p>
 ```
 
 `segments` に指定した `base` が本文に見つかると、対応する `reading` が `<rt>` として挿入されます。
 
 ## Astro で使う例
 
-`astro.config.mjs` の Markdown 設定に追加します。
+Astro で Sätteri を Markdown processor として使用する場合は、`@astrojs/markdown-satteri` を追加します。
+
+```sh
+pnpm add @astrojs/markdown-satteri satteri-ruby-annotator
+```
+
+`astro.config.mjs` で `satteri()` に HAST プラグインを渡します。
 
 ```js
 import { defineConfig } from "astro/config";
-import rehypeRuby from "rehype-ruby-annotator";
+import { satteri } from "@astrojs/markdown-satteri";
+import satteriRuby from "satteri-ruby-annotator";
 
 export default defineConfig({
     markdown: {
-        rehypePlugins: [
-            [
-                rehypeRuby,
-                {
+        processor: satteri({
+            hastPlugins: [
+                satteriRuby({
                     entries: [
                         {
                             segments: [
@@ -103,9 +121,9 @@ export default defineConfig({
                             ],
                         },
                     ],
-                },
+                }),
             ],
-        ],
+        }),
     },
 });
 ```
@@ -130,7 +148,9 @@ export default defineConfig({
 
 ### 語句の一部だけにルビを付ける
 
-`segments` には文字列も混ぜられます。文字列部分は一致には含まれますが、ルビは付きません。
+`segments` には文字列も混ぜられます。
+
+文字列部分は一致判定には含まれますが、ルビは付きません。
 
 ```ts
 {
@@ -151,7 +171,8 @@ export default defineConfig({
 ### `match` で一致文字列を明示する
 
 通常、照合に使う文字列は `segments` から自動で組み立てられます。
-意図しない指定ミスを検出したい場合は `match` を書けます。
+
+意図しない指定ミスを検出したい場合は `match` を明示できます。
 
 ```ts
 {
@@ -162,14 +183,14 @@ export default defineConfig({
 }
 ```
 
-`match` と `segments` から推測される文字列が一致しない場合はエラーになります。
+`match` と `segments` から組み立てた文字列が一致しない場合はエラーになります。
 
 ## オプション
 
 ```ts
-import type { RehypeRubyOptions } from "rehype-ruby-annotator";
+import type { SatteriRubyOptions } from "satteri-ruby-annotator";
 
-const options: RehypeRubyOptions = {
+const options: SatteriRubyOptions = {
     entries: [],
 };
 ```
@@ -214,7 +235,8 @@ math, svg
 
 ## 一致ルール
 
-- テキストノードごとに処理します。HTML 要素をまたいだ語句には一致しません。
+- テキストノードごとに処理します。
+- HTML 要素をまたいだ語句には一致しません。
 - 同じ位置で複数の候補が一致する場合は、より長い語句を優先します。
 - 同じ `match` を持つエントリを複数登録するとエラーになります。
 - 空文字列に一致するエントリは登録できません。
@@ -226,7 +248,7 @@ import {
     DEFAULT_SKIP_TAGS,
     getEntryText,
     normalizeEntry,
-} from "rehype-ruby-annotator";
+} from "satteri-ruby-annotator";
 ```
 
 | API | 説明 |

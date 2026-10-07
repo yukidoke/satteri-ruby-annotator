@@ -23,7 +23,7 @@ export interface RubyLogger {
     debug(message?: unknown, ...optionalParams: unknown[]): void;
 }
 
-export interface RehypeRubyOptions {
+export interface SatteriRubyOptions {
     entries: RubyEntryInput[];
     additionalSkipTags?: string[];
     skipTags?: string[];
